@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Josh's Stay – Apartment Schedule</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy: #0a1628;
+      --navy-mid: #102040;
+      --gold: #d4a017;
+      --gold-light: #f5c842;
+      --green: #2ecc71;
+      --green-dark: #27ae60;
+      --red: #e74c3c;
+      --red-dark: #c0392b;
+      --white: #f0ede8;
+      --gray: #8899aa;
+      --card-bg: #0f1e35;
+      --border: rgba(212, 160, 23, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--navy);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 48px 24px 36px;
+      background: linear-gradient(180deg, #060e1c 0%, var(--navy) 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212,160,23,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Football field lines background */
+    .field-lines {
+      position: absolute;
+      inset: 0;
+      opacity: .04;
+      background-image:
+        repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 80px),
+        repeating-linear-gradient(0deg,  #fff 0px, #fff 1px, transparent 1px, transparent 40px);
+    }
+
+    .kabuncle-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--navy);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      border-radius: 2px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 10vw, 96px);
+      letter-spacing: 4px;
+      color: var(--white);
+      line-height: .95;
+      text-shadow: 0 0 60px rgba(212,160,23,.35);
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 10px;
+    }
+
+    /* Derrick Henry card */
+    .dh-card {
+      position: relative;
+      max-width: 540px;
+      margin: 32px auto 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-align: left;
+      box-shadow: 0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(212,160,23,.2);
+    }
+
+    .dh-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px;
+      line-height: 1;
+      color: var(--gold);
+      opacity: .9;
+      flex-shrink: 0;
+      text-shadow: 2px 2px 0 rgba(0,0,0,.4);
+    }
+
+    .dh-info h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--white);
+    }
+
+    .dh-info .dh-alias {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .dh-info p {
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .football-emoji {
+      font-size: 28px;
+      animation: spin 4s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      0%, 100% { transform: rotate(-10deg) scale(1); }
+      50% { transform: rotate(10deg) scale(1.1); }
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 24px 16px 12px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .legend-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .dot-available { background: var(--green); }
+    .dot-busy      { background: var(--red); }
+
+    /* ── CALENDAR SECTION ── */
+    .calendar-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px 20px 60px;
+    }
+
+    .month-block {
+      margin-bottom: 40px;
+    }
+
+    .month-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .month-label span { color: var(--gray); font-size: 22px; }
+
+    .day-headers {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .day-header {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--gray);
+      padding: 4px 0;
+    }
+
+    .day-header.weekend-hdr { color: var(--gold); }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-cell {
+      border-radius: 6px;
+      padding: 10px 8px;
+      min-height: 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid transparent;
+      transition: transform .15s, box-shadow .15s, background .2s, border-color .2s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .day-cell:not(.empty) {
+      cursor: pointer;
+    }
+
+    .day-cell:not(.empty):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,.4);
+    }
+
+    /* Flash animation on toggle */
+    @keyframes flashToggle {
+      0%   { opacity: 1; }
+      30%  { opacity: .4; }
+      100% { opacity: 1; }
+    }
+
+    .day-cell.toggling {
+      animation: flashToggle .25s ease;
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .day-cell.available {
+      background: linear-gradient(135deg, #0d2b1a 0%, #0a2016 100%);
+      border-color: rgba(46,204,113,.3);
+    }
+
+    .day-cell.busy {
+      background: linear-gradient(135deg, #2b0d0d 0%, #200a0a 100%);
+      border-color: rgba(231,76,60,.3);
+    }
+
+    /* Sunday night special */
+    .day-cell.sunday-avail {
+      background: linear-gradient(135deg, #0d2b1a 0%, #101820 100%);
+      border-color: rgba(46,204,113,.2);
+    }
+
+    .day-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .day-cell.available .day-num { color: var(--green); }
+    .day-cell.sunday-avail .day-num { color: var(--green); }
+    .day-cell.busy .day-num      { color: var(--red); }
+
+    .status-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 2px 6px;
+      align-self: flex-start;
+    }
+
+    .tag-available { background: rgba(46,204,113,.2); color: var(--green); }
+    .tag-busy      { background: rgba(231,76,60,.2);  color: var(--red); }
+    .tag-night     { background: rgba(46,204,113,.15); color: #7fefb0; font-size: 9px; }
+
+    /* football icon on busy days */
+    .busy-icon {
+      position: absolute;
+      bottom: 6px;
+      right: 7px;
+      font-size: 16px;
+      opacity: .5;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 16px;
+      border-top: 1px solid var(--border);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      color: var(--gray);
+      text-transform: uppercase;
+    }
+
+    footer strong { color: var(--gold); }
+
+    /* ── ENTRANCE ANIMATION ── */
+    .day-cell:not(.empty) {
+      opacity: 0;
+      animation: fadeUp .4s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="field-lines"></div>
+  <div class="kabuncle-badge">🏈 Welcome, Josh</div>
+  <h1>Your <span>Stay</span><br>Schedule</h1>
+  <p class="hero-sub">April 1 – May 5, 2025 &nbsp;·&nbsp; The Apartment</p>
+
+  <div class="dh-card">
+    <div class="dh-number">22</div>
+    <div class="dh-info">
+      <div class="dh-alias">"Ka-Buncle" 💪</div>
+      <h2>Derrick Henry</h2>
+      <p>Your uncle. A legend. 247 lbs of pure determination.<br>
+         <em style="color:var(--gold-light)">May his runs inspire your mornings here.</em>
+      </p>
+    </div>
+    <div class="football-emoji">🏈</div>
+  </div>
+</section>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-available"></div> I'm home – you're good!</div>
+  <div class="legend-item"><div class="legend-dot dot-busy"></div> I'm gone – weekend busy</div>
+</div>
+<p style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;color:var(--gray);padding-bottom:8px;">👆 Tap any day to toggle it</p>
+
+<div class="calendar-section" id="cal"></div>
+
+
+<div id="share-bar" style="
+  max-width:900px;margin:0 auto 32px;padding:0 20px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+">
+  <button id="share-btn" onclick="copyShareLink()" style="
+    font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
+    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);
+    color:var(--navy);border:none;border-radius:6px;
+    padding:10px 28px;cursor:pointer;
+    box-shadow:0 4px 16px rgba(212,160,23,.35);
+    transition:transform .1s,box-shadow .1s;
+  " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(212,160,23,.5)'"
+     onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(212,160,23,.35)'">
+    🔗 Copy Share Link
+  </button>
+  <span id="share-msg" style="
+    font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;
+    color:var(--green);opacity:0;transition:opacity .3s;
+  ">✓ Link copied! Send it back.</span>
+</div>
+
+<footer>
+  Made with love for <strong>Josh</strong> &nbsp;·&nbsp; Channel your inner <strong>Ka-Buncle</strong> every day 🏈
+</footer>
+
+<script>
+  const START = new Date(2025, 3, 1);  // April 1
+  const END   = new Date(2025, 4, 5); // May 5
+
+  // Build ordered list of all dates in range
+  const allDates = [];
+  let cur = new Date(START);
+  while (cur <= END) { allDates.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
+
+  // Default state: 1 = busy, 0 = home
+  function defaultBusy(date) { return (date.getDay() === 6 || date.getDay() === 5) ? 1 : 0; }
+
+  // ── Load state from URL hash (e.g. #s=0101001...)
+  function loadStateFromURL() {
+    const hash = location.hash.replace('#s=', '');
+    if (hash.length === allDates.length) {
+      return hash.split('').map(c => parseInt(c, 10));
+    }
+    return allDates.map(d => defaultBusy(d));
+  }
+
+  const state = loadStateFromURL(); // array of 0/1 per day index
+
+  // Group dates by month
+  const months = {};
+  allDates.forEach((d, i) => {
+    const key = `${d.getFullYear()}-${d.getMonth()}`;
+    if (!months[key]) months[key] = { year: d.getFullYear(), month: d.getMonth(), entries: [] };
+    months[key].entries.push({ d, i });
+  });
+
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DOW_LABELS  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const cal = document.getElementById('cal');
+  let cellIndex = 0;
+
+  Object.values(months).forEach(({ year, month, entries }) => {
+    const block = document.createElement('div');
+    block.className = 'month-block';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'month-label';
+    lbl.innerHTML = `${MONTH_NAMES[month]} <span>${year}</span>`;
+    block.appendChild(lbl);
+
+    const hdrs = document.createElement('div');
+    hdrs.className = 'day-headers';
+    DOW_LABELS.forEach((d, i) => {
+      const h = document.createElement('div');
+      h.className = 'day-header' + (i === 0 || i === 6 ? ' weekend-hdr' : '');
+      h.textContent = d;
+      hdrs.appendChild(h);
+    });
+    block.appendChild(hdrs);
+
+    const grid = document.createElement('div');
+    grid.className = 'calendar-grid';
+
+    // Leading empty cells
+    const firstDow = entries[0].d.getDay();
+    for (let i = 0; i < firstDow; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'day-cell empty';
+      grid.appendChild(empty);
+    }
+
+    entries.forEach(({ d, i }) => {
+      const cell = document.createElement('div');
+
+      function renderCell() {
+        const busy = state[i];
+        cell.className = `day-cell ${busy ? 'busy' : 'available'}`;
+        cell.innerHTML = busy
+          ? `<span class="day-num">${d.getDate()}</span><span class="status-tag tag-busy">Away</span><span class="busy-icon">🏈</span>`
+          : `<span class="day-num">${d.getDate()}</span><span class="status-tag tag-available">Home ✓</span>`;
+      }
+
+      cell.style.animationDelay = `${cellIndex * 18}ms`;
+      renderCell();
+
+      cell.addEventListener('click', () => {
+        state[i] = state[i] ? 0 : 1;
+        renderCell();
+        cell.classList.add('toggling');
+        cell.addEventListener('animationend', () => cell.classList.remove('toggling'), { once: true });
+      });
+
+      grid.appendChild(cell);
+      cellIndex++;
+    });
+
+    block.appendChild(grid);
+    cal.appendChild(block);
+  });
+
+  // ── Share code ──────────────────────────────────────────────────────────────
+  function copyShareLink() {
+    const code = state.join('');
+    const box = document.getElementById('share-code-box');
+    const msg = document.getElementById('share-msg');
+    box.value = code;
+    box.style.display = 'block';
+    box.select();
+    box.setSelectionRange(0, 99999);
+    try {
+      document.execCommand('copy');
+      msg.textContent = '✓ Code copied! Send it to Nadav.';
+    } catch(e) {
+      msg.textContent = '👆 Select the code above and copy it!';
+    }
+    msg.style.opacity = '1';
+    setTimeout(() => msg.style.opacity = '0', 4000);
+  }
+</script>
+</body>
+</html>
