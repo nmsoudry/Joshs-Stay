@@ -1,292 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Josh's Stay – Apartment Schedule</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Josh's Stay · Schedule</title>
+  <meta name="description" content="Apartment availability schedule — tap to toggle days." />
+  <meta property="og:title" content="Josh's Stay Schedule 🏈" />
+  <meta property="og:description" content="Tap a day to update it — changes save automatically." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap"
+    rel="stylesheet" />
+
   <style>
     :root {
-      --navy: #0a1628;
-      --navy-mid: #102040;
-      --gold: #d4a017;
-      --gold-light: #f5c842;
-      --green: #2ecc71;
-      --green-dark: #27ae60;
-      --red: #e74c3c;
-      --red-dark: #c0392b;
-      --white: #f0ede8;
-      --gray: #8899aa;
-      --card-bg: #0f1e35;
-      --border: rgba(212, 160, 23, 0.25);
+      --ink: #0b1623;
+      --ink-mid: #162236;
+      --ink-soft: #1e3050;
+      --gold: #c9960c;
+      --gold-hi: #f0b429;
+      --go: #1a9e5f;
+      --go-hi: #22c97a;
+      --stop: #c0392b;
+      --stop-hi: #e74c3c;
+      --chalk: #e8e2d8;
+      --muted: #5d7a96;
+      --border: rgba(200, 150, 12, .22);
+      --r: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
-      background-color: var(--navy);
-      color: var(--white);
-      font-family: 'Barlow', sans-serif;
+      background: var(--ink);
+      color: var(--chalk);
+      font-family: 'DM Sans', system-ui, sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ── HERO ── */
     .hero {
       position: relative;
+      padding: 44px 20px 32px;
       text-align: center;
-      padding: 48px 24px 36px;
-      background: linear-gradient(180deg, #060e1c 0%, var(--navy) 100%);
       overflow: hidden;
+      background: linear-gradient(170deg, #050e1c 0%, var(--ink) 60%);
     }
 
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212,160,23,.18) 0%, transparent 70%);
+      background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(201, 150, 12, .22) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    /* Football field lines background */
-    .field-lines {
+    .hero::after {
+      content: '';
       position: absolute;
       inset: 0;
-      opacity: .04;
+      opacity: .025;
       background-image:
-        repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 80px),
-        repeating-linear-gradient(0deg,  #fff 0px, #fff 1px, transparent 1px, transparent 40px);
+        repeating-linear-gradient(90deg, #fff 0 1px, transparent 1px 60px),
+        repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 32px);
+      pointer-events: none;
     }
 
-    .kabuncle-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-      color: var(--navy);
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-hi) 100%);
+      color: var(--ink);
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 13px;
-      letter-spacing: 2px;
-      padding: 4px 14px;
-      border-radius: 2px;
-      margin-bottom: 16px;
-      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      padding: 5px 14px;
+      border-radius: 3px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
     }
 
     .hero h1 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(52px, 10vw, 96px);
-      letter-spacing: 4px;
-      color: var(--white);
-      line-height: .95;
-      text-shadow: 0 0 60px rgba(212,160,23,.35);
+      font-size: clamp(56px, 13vw, 108px);
+      letter-spacing: 3px;
+      line-height: .92;
+      position: relative;
+      z-index: 1;
+      color: var(--chalk);
+      text-shadow: 0 0 80px rgba(201, 150, 12, .3);
     }
 
-    .hero h1 span {
-      color: var(--gold);
+    .hero h1 em {
+      color: var(--gold-hi);
+      font-style: normal;
     }
 
     .hero-sub {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
       letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gray);
+      color: var(--muted);
       margin-top: 10px;
+      position: relative;
+      z-index: 1;
     }
 
-    /* Derrick Henry card */
-    .dh-card {
+    /* ── PLAYER CARD ── */
+    .player-card {
       position: relative;
-      max-width: 540px;
-      margin: 32px auto 0;
-      background: var(--card-bg);
+      z-index: 1;
+      max-width: 480px;
+      margin: 26px auto 0;
+      background: var(--ink-mid);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px 24px;
+      border-radius: var(--r);
+      padding: 18px 20px;
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 18px;
       text-align: left;
-      box-shadow: 0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(212,160,23,.2);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(201, 150, 12, .18);
     }
 
-    .dh-number {
+    .jersey {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 72px;
+      font-size: 68px;
       line-height: 1;
       color: var(--gold);
-      opacity: .9;
       flex-shrink: 0;
-      text-shadow: 2px 2px 0 rgba(0,0,0,.4);
+      text-shadow: 3px 3px 0 rgba(0, 0, 0, .35);
     }
 
-    .dh-info h2 {
+    .player-info h2 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      letter-spacing: 2px;
-      color: var(--white);
+      font-size: 26px;
+      letter-spacing: 1.5px;
     }
 
-    .dh-info .dh-alias {
+    .player-alias {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      color: var(--gold);
+      font-size: 17px;
+      color: var(--gold-hi);
       letter-spacing: 1px;
     }
 
-    .dh-info p {
-      font-size: 13px;
-      color: var(--gray);
-      margin-top: 6px;
+    .player-info p {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 5px;
       line-height: 1.5;
     }
 
-    .football-emoji {
-      font-size: 28px;
-      animation: spin 4s ease-in-out infinite;
+    .ball {
+      font-size: 26px;
+      animation: rock 3.5s ease-in-out infinite;
+      margin-left: auto;
+      flex-shrink: 0;
     }
 
-    @keyframes spin {
-      0%, 100% { transform: rotate(-10deg) scale(1); }
-      50% { transform: rotate(10deg) scale(1.1); }
+    @keyframes rock {
+
+      0%,
+      100% {
+        transform: rotate(-12deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(12deg) scale(1.08);
+      }
+    }
+
+    /* ── SYNC STATUS BAR ── */
+    .sync-bar {
+      max-width: 860px;
+      margin: 20px auto 0;
+      padding: 0 16px;
+    }
+
+    .sync-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background .3s, color .3s;
+    }
+
+    .sync-pill.loading {
+      background: rgba(93, 122, 150, .18);
+      color: var(--muted);
+    }
+
+    .sync-pill.saved {
+      background: rgba(34, 201, 122, .12);
+      color: var(--go-hi);
+    }
+
+    .sync-pill.saving {
+      background: rgba(240, 180, 41, .12);
+      color: var(--gold-hi);
+    }
+
+    .sync-pill.error {
+      background: rgba(231, 76, 60, .12);
+      color: var(--stop-hi);
+    }
+
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sync-pill.loading .sync-dot {
+      background: var(--muted);
+      animation: pulse-dot 1.2s ease infinite;
+    }
+
+    .sync-pill.saved .sync-dot {
+      background: var(--go-hi);
+    }
+
+    .sync-pill.saving .sync-dot {
+      background: var(--gold-hi);
+      animation: pulse-dot .8s ease infinite;
+    }
+
+    .sync-pill.error .sync-dot {
+      background: var(--stop-hi);
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(.7);
+      }
     }
 
     /* ── LEGEND ── */
     .legend {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      padding: 24px 16px 12px;
+      gap: 20px;
       flex-wrap: wrap;
+      padding: 18px 16px 6px;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--chalk);
+      opacity: .85;
     }
 
-    .legend-dot {
-      width: 16px;
-      height: 16px;
+    .pip {
+      width: 14px;
+      height: 14px;
       border-radius: 3px;
       flex-shrink: 0;
     }
 
-    .dot-available { background: var(--green); }
-    .dot-busy      { background: var(--red); }
+    .pip-go {
+      background: var(--go-hi);
+    }
 
-    /* ── CALENDAR SECTION ── */
-    .calendar-section {
-      max-width: 900px;
+    .pip-stop {
+      background: var(--stop-hi);
+    }
+
+    .tap-hint {
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: .8px;
+      color: var(--muted);
+      padding-bottom: 12px;
+    }
+
+    /* ── CALENDAR ── */
+    .cal-wrap {
+      max-width: 860px;
       margin: 0 auto;
-      padding: 16px 20px 60px;
+      padding: 8px 16px 24px;
+    }
+
+    /* Skeleton shimmer while loading */
+    .skeleton {
+      background: linear-gradient(90deg, var(--ink-mid) 25%, var(--ink-soft) 50%, var(--ink-mid) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease infinite;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     .month-block {
-      margin-bottom: 40px;
+      margin-bottom: 36px;
     }
 
     .month-label {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
+      font-size: 32px;
       letter-spacing: 4px;
       color: var(--gold);
       border-bottom: 2px solid var(--border);
-      padding-bottom: 8px;
-      margin-bottom: 16px;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
       display: flex;
-      align-items: center;
-      gap: 12px;
+      align-items: baseline;
+      gap: 10px;
     }
 
-    .month-label span { color: var(--gray); font-size: 22px; }
+    .month-label span {
+      color: var(--muted);
+      font-size: 20px;
+    }
 
-    .day-headers {
+    .dow-headers {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-bottom: 6px;
+      gap: 5px;
+      margin-bottom: 5px;
     }
 
-    .day-header {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    .dow {
       text-align: center;
-      color: var(--gray);
-      padding: 4px 0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 3px 0;
     }
 
-    .day-header.weekend-hdr { color: var(--gold); }
+    .dow.wknd {
+      color: var(--gold);
+    }
 
-    .calendar-grid {
+    .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
+      gap: 5px;
     }
 
-    .day-cell {
+    .day {
       border-radius: 6px;
-      padding: 10px 8px;
-      min-height: 72px;
+      min-height: 68px;
+      padding: 9px 7px 7px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: 1px solid transparent;
-      transition: transform .15s, box-shadow .15s, background .2s, border-color .2s;
-      cursor: default;
+      cursor: pointer;
+      user-select: none;
       position: relative;
       overflow: hidden;
+      transition: transform .12s, box-shadow .12s;
+      opacity: 0;
+      animation: fadeUp .35s ease forwards;
     }
 
-    .day-cell:not(.empty) {
-      cursor: pointer;
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .day-cell:not(.empty):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,.4);
-    }
-
-    /* Flash animation on toggle */
-    @keyframes flashToggle {
-      0%   { opacity: 1; }
-      30%  { opacity: .4; }
-      100% { opacity: 1; }
-    }
-
-    .day-cell.toggling {
-      animation: flashToggle .25s ease;
-    }
-
-    .day-cell.empty {
+    .day.empty {
       background: transparent;
       border-color: transparent;
+      cursor: default;
+      animation: none;
+      opacity: 1;
+      pointer-events: none;
     }
 
-    .day-cell.available {
-      background: linear-gradient(135deg, #0d2b1a 0%, #0a2016 100%);
-      border-color: rgba(46,204,113,.3);
+    .day:not(.empty):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .4);
     }
 
-    .day-cell.busy {
-      background: linear-gradient(135deg, #2b0d0d 0%, #200a0a 100%);
-      border-color: rgba(231,76,60,.3);
+    .day.go {
+      background: linear-gradient(145deg, #0d2b1c 0%, #091f14 100%);
+      border-color: rgba(34, 201, 122, .28);
     }
 
-    /* Sunday night special */
-    .day-cell.sunday-avail {
-      background: linear-gradient(135deg, #0d2b1a 0%, #101820 100%);
-      border-color: rgba(46,204,113,.2);
+    .day.stop {
+      background: linear-gradient(145deg, #2a0e0e 0%, #1e0909 100%);
+      border-color: rgba(231, 76, 60, .28);
+    }
+
+    /* Disabled/loading state while saving */
+    .day.saving-state {
+      pointer-events: none;
+      opacity: .55;
     }
 
     .day-num {
@@ -295,229 +444,530 @@
       line-height: 1;
     }
 
-    .day-cell.available .day-num { color: var(--green); }
-    .day-cell.sunday-avail .day-num { color: var(--green); }
-    .day-cell.busy .day-num      { color: var(--red); }
+    .day.go .day-num {
+      color: var(--go-hi);
+    }
 
-    .status-tag {
-      font-family: 'Barlow Condensed', sans-serif;
+    .day.stop .day-num {
+      color: var(--stop-hi);
+    }
+
+    .day-tag {
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: .8px;
       text-transform: uppercase;
       border-radius: 3px;
       padding: 2px 6px;
       align-self: flex-start;
+      line-height: 1.4;
     }
 
-    .tag-available { background: rgba(46,204,113,.2); color: var(--green); }
-    .tag-busy      { background: rgba(231,76,60,.2);  color: var(--red); }
-    .tag-night     { background: rgba(46,204,113,.15); color: #7fefb0; font-size: 9px; }
-
-    /* football icon on busy days */
-    .busy-icon {
-      position: absolute;
-      bottom: 6px;
-      right: 7px;
-      font-size: 16px;
-      opacity: .5;
+    .tag-go {
+      background: rgba(34, 201, 122, .15);
+      color: var(--go-hi);
     }
 
-    /* ── FOOTER ── */
+    .tag-stop {
+      background: rgba(231, 76, 60, .15);
+      color: var(--stop-hi);
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+
+      40% {
+        opacity: .35;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .day.pulse {
+      animation: pulse .22s ease;
+    }
+
+    /* ── SHARE BAR ── */
+    .share-bar {
+      max-width: 860px;
+      margin: 0 auto 16px;
+      padding: 0 16px;
+    }
+
+    .share-btn {
+      width: 100%;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2.5px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-hi) 100%);
+      color: var(--ink);
+      border: none;
+      border-radius: var(--r);
+      padding: 14px 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(201, 150, 12, .35);
+      transition: transform .12s, box-shadow .12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 28px rgba(201, 150, 12, .5);
+    }
+
+    .share-btn:active {
+      transform: translateY(0);
+    }
+
+    .share-result {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .share-result.visible {
+      display: block;
+    }
+
+    .share-url {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      background: var(--ink-mid);
+      color: var(--gold-hi);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      width: 100%;
+      word-break: break-all;
+      cursor: pointer;
+      display: block;
+      line-height: 1.5;
+      outline: none;
+      resize: none;
+      min-height: 52px;
+    }
+
+    .share-url:focus {
+      border-color: var(--gold);
+    }
+
+    .share-msg {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      color: var(--go-hi);
+      margin-top: 7px;
+      min-height: 20px;
+    }
+
+    .share-instructions {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    /* ── CONFIG NOTICE (shown if keys not set) ── */
+    .config-notice {
+      max-width: 860px;
+      margin: 16px auto;
+      padding: 16px 20px;
+      background: rgba(240, 180, 41, .08);
+      border: 1px solid rgba(240, 180, 41, .3);
+      border-radius: var(--r);
+      font-size: 13px;
+      color: var(--gold-hi);
+      line-height: 1.6;
+      display: none;
+    }
+
+    .config-notice.visible {
+      display: block;
+    }
+
+    .config-notice code {
+      background: rgba(0, 0, 0, .3);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+    }
+
     footer {
       text-align: center;
-      padding: 28px 16px;
       border-top: 1px solid var(--border);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
-      letter-spacing: 1.5px;
-      color: var(--gray);
-      text-transform: uppercase;
+      padding: 24px 16px;
+      font-size: 13px;
+      letter-spacing: .5px;
+      color: var(--muted);
     }
 
-    footer strong { color: var(--gold); }
-
-    /* ── ENTRANCE ANIMATION ── */
-    .day-cell:not(.empty) {
-      opacity: 0;
-      animation: fadeUp .4s ease forwards;
+    footer strong {
+      color: var(--gold);
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+    @media (max-width: 500px) {
+      .day {
+        min-height: 54px;
+        padding: 7px 5px 5px;
+      }
+
+      .day-num {
+        font-size: 18px;
+      }
+
+      .day-tag {
+        font-size: 9px;
+        padding: 1px 4px;
+      }
+
+      .player-card {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<section class="hero">
-  <div class="field-lines"></div>
-  <div class="kabuncle-badge">🏈 Welcome, Josh</div>
-  <h1>Your <span>Stay</span><br>Schedule</h1>
-  <p class="hero-sub">April 1 – May 5, 2025 &nbsp;·&nbsp; The Apartment</p>
+  <!-- ══════════════════════════════════════════════
+     CONFIGURATION — paste your Supabase keys here
+     ══════════════════════════════════════════════ -->
+  <script>
+    const SUPABASE_URL = 'https://dljsrykzzjwhwxwqpzjz.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_v1Ca_n8f2666EG0DH__BTQ_ZJ0NLYut';
+    const CALENDAR_ID = 'josh-schedule';        // a unique name for this calendar
+  </script>
+  <!-- ══════════════════════════════════════════════ -->
 
-  <div class="dh-card">
-    <div class="dh-number">22</div>
-    <div class="dh-info">
-      <div class="dh-alias">"Ka-Buncle" 💪</div>
-      <h2>Derrick Henry</h2>
-      <p>Your uncle. A legend. 247 lbs of pure determination.<br>
-         <em style="color:var(--gold-light)">May his runs inspire your mornings here.</em>
-      </p>
+  <!-- Supabase JS SDK (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="eyebrow">🏈 Welcome, Josh</div>
+    <h1>Your <em>Stay</em><br>Schedule</h1>
+    <p class="hero-sub">April 1 – May 5, 2025 &nbsp;·&nbsp; The Apartment</p>
+    <div class="player-card">
+      <div class="jersey">22</div>
+      <div class="player-info">
+        <div class="player-alias">"Ka-Buncle" 💪</div>
+        <h2>Derrick Henry</h2>
+        <p>Your uncle. A legend. 247 lbs of pure determination.<br>
+          <span style="color:var(--gold-hi)">May his runs inspire your mornings.</span>
+        </p>
+      </div>
+      <div class="ball">🏈</div>
     </div>
-    <div class="football-emoji">🏈</div>
+  </section>
+
+  <!-- ── SYNC STATUS ── -->
+  <div class="sync-bar">
+    <div class="sync-pill loading" id="syncPill">
+      <div class="sync-dot"></div>
+      <span id="syncText">Connecting…</span>
+    </div>
   </div>
-</section>
 
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot dot-available"></div> I'm home – you're good!</div>
-  <div class="legend-item"><div class="legend-dot dot-busy"></div> I'm gone – weekend busy</div>
-</div>
-<p style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;color:var(--gray);padding-bottom:8px;">👆 Tap any day to toggle it</p>
+  <!-- ── CONFIG NOTICE ── -->
+  <div class="config-notice" id="configNotice">
+    ⚙️ <strong>Setup needed:</strong> Open <code>index.html</code> and replace <code>YOUR_SUPABASE_URL</code> and
+    <code>YOUR_SUPABASE_ANON_KEY</code> with your real Supabase keys. See the instructions below.
+  </div>
 
-<div class="calendar-section" id="cal"></div>
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="pip pip-go"></div> Nadav at Veda's – come over!
+    </div>
+    <div class="legend-item">
+      <div class="pip pip-stop"></div> Nadav Home
+    </div>
+  </div>
+  <p class="tap-hint">👆 Tap any day to toggle it · changes save automatically</p>
 
+  <!-- ── CALENDAR ── -->
+  <div class="cal-wrap" id="cal"></div>
 
-<div id="share-bar" style="
-  max-width:900px;margin:0 auto 32px;padding:0 20px;
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-">
-  <button id="share-btn" onclick="copyShareLink()" style="
-    font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
-    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);
-    color:var(--navy);border:none;border-radius:6px;
-    padding:10px 28px;cursor:pointer;
-    box-shadow:0 4px 16px rgba(212,160,23,.35);
-    transition:transform .1s,box-shadow .1s;
-  " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(212,160,23,.5)'"
-     onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(212,160,23,.35)'">
-    🔗 Copy Share Link
-  </button>
-  <span id="share-msg" style="
-    font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;
-    color:var(--green);opacity:0;transition:opacity .3s;
-  ">✓ Link copied! Send it back.</span>
-</div>
+  <!-- ── SHARE ── -->
+  <div class="share-bar">
+    <button class="share-btn" id="shareBtn">
+      📲 Copy Link to Share via iMessage
+    </button>
+    <div class="share-result" id="shareResult">
+      <textarea class="share-url" id="shareUrl" readonly rows="2"></textarea>
+      <div class="share-msg" id="shareMsg"></div>
+      <div class="share-instructions">
+        This link opens the calendar exactly as it is right now — changes are also saved automatically so anyone opening
+        the plain URL always sees the latest version.
+      </div>
+    </div>
+  </div>
 
-<footer>
-  Made with love for <strong>Josh</strong> &nbsp;·&nbsp; Channel your inner <strong>Ka-Buncle</strong> every day 🏈
-</footer>
+  <footer>
+    Made with love for <strong>Josh</strong> &nbsp;·&nbsp; Channel your inner <strong>Ka-Buncle</strong> every day 🏈
+  </footer>
 
-<script>
-  const START = new Date(2025, 3, 1);  // April 1
-  const END   = new Date(2025, 4, 5); // May 5
-
-  // Build ordered list of all dates in range
-  const allDates = [];
-  let cur = new Date(START);
-  while (cur <= END) { allDates.push(new Date(cur)); cur.setDate(cur.getDate() + 1); }
-
-  // Default state: 1 = busy, 0 = home
-  function defaultBusy(date) { return (date.getDay() === 6 || date.getDay() === 5) ? 1 : 0; }
-
-  // ── Load state from URL hash (e.g. #s=0101001...)
-  function loadStateFromURL() {
-    const hash = location.hash.replace('#s=', '');
-    if (hash.length === allDates.length) {
-      return hash.split('').map(c => parseInt(c, 10));
+  <script>
+    // ── DATE RANGE ────────────────────────────────────────────────────────────
+    const START = new Date(2025, 3, 1);
+    const END = new Date(2025, 4, 5);
+    const allDates = [];
+    for (let d = new Date(START); d <= END; d.setDate(d.getDate() + 1)) {
+      allDates.push(new Date(d));
     }
-    return allDates.map(d => defaultBusy(d));
-  }
+    const N = allDates.length;
 
-  const state = loadStateFromURL(); // array of 0/1 per day index
-
-  // Group dates by month
-  const months = {};
-  allDates.forEach((d, i) => {
-    const key = `${d.getFullYear()}-${d.getMonth()}`;
-    if (!months[key]) months[key] = { year: d.getFullYear(), month: d.getMonth(), entries: [] };
-    months[key].entries.push({ d, i });
-  });
-
-  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const DOW_LABELS  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
-  const cal = document.getElementById('cal');
-  let cellIndex = 0;
-
-  Object.values(months).forEach(({ year, month, entries }) => {
-    const block = document.createElement('div');
-    block.className = 'month-block';
-
-    const lbl = document.createElement('div');
-    lbl.className = 'month-label';
-    lbl.innerHTML = `${MONTH_NAMES[month]} <span>${year}</span>`;
-    block.appendChild(lbl);
-
-    const hdrs = document.createElement('div');
-    hdrs.className = 'day-headers';
-    DOW_LABELS.forEach((d, i) => {
-      const h = document.createElement('div');
-      h.className = 'day-header' + (i === 0 || i === 6 ? ' weekend-hdr' : '');
-      h.textContent = d;
-      hdrs.appendChild(h);
-    });
-    block.appendChild(hdrs);
-
-    const grid = document.createElement('div');
-    grid.className = 'calendar-grid';
-
-    // Leading empty cells
-    const firstDow = entries[0].d.getDay();
-    for (let i = 0; i < firstDow; i++) {
-      const empty = document.createElement('div');
-      empty.className = 'day-cell empty';
-      grid.appendChild(empty);
+    function defaultState() {
+      return allDates.map(d => (d.getDay() === 5 || d.getDay() === 6) ? 1 : 0);
     }
 
-    entries.forEach(({ d, i }) => {
-      const cell = document.createElement('div');
+    // ── SUPABASE CLIENT ───────────────────────────────────────────────────────
+    const configOk = SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+    const db = configOk ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-      function renderCell() {
-        const busy = state[i];
-        cell.className = `day-cell ${busy ? 'busy' : 'available'}`;
-        cell.innerHTML = busy
-          ? `<span class="day-num">${d.getDate()}</span><span class="status-tag tag-busy">Away</span><span class="busy-icon">🏈</span>`
-          : `<span class="day-num">${d.getDate()}</span><span class="status-tag tag-available">Home ✓</span>`;
+    if (!configOk) {
+      document.getElementById('configNotice').classList.add('visible');
+      setSyncStatus('error', '⚠️ Supabase not configured — changes won\'t save');
+    }
+
+    // ── STATE ─────────────────────────────────────────────────────────────────
+    let state = defaultState();
+    let saveTimer = null;
+
+    // ── SYNC STATUS ───────────────────────────────────────────────────────────
+    function setSyncStatus(type, text) {
+      const pill = document.getElementById('syncPill');
+      const txt = document.getElementById('syncText');
+      pill.className = `sync-pill ${type}`;
+      txt.textContent = text;
+    }
+
+    // ── LOAD FROM SUPABASE ────────────────────────────────────────────────────
+    async function loadFromDB() {
+      if (!db) {
+        // No DB: try URL hash, else defaults
+        applyHashOrDefaults();
+        return;
       }
+      setSyncStatus('loading', 'Loading…');
+      try {
+        const { data, error } = await db
+          .from('calendars')
+          .select('state')
+          .eq('id', CALENDAR_ID)
+          .single();
 
-      cell.style.animationDelay = `${cellIndex * 18}ms`;
-      renderCell();
+        if (error && error.code !== 'PGRST116') throw error; // PGRST116 = not found
 
-      cell.addEventListener('click', () => {
-        state[i] = state[i] ? 0 : 1;
-        renderCell();
-        cell.classList.add('toggling');
-        cell.addEventListener('animationend', () => cell.classList.remove('toggling'), { once: true });
+        if (data && data.state && data.state.length === N) {
+          state = data.state.split('').map(Number);
+        } else {
+          // First load ever — check URL hash, else defaults
+          applyHashOrDefaults();
+        }
+        renderCalendar();
+        setSyncStatus('saved', '✓ Up to date');
+      } catch (e) {
+        console.error('Load error:', e);
+        applyHashOrDefaults();
+        renderCalendar();
+        setSyncStatus('error', '⚠️ Offline — changes may not save');
+      }
+    }
+
+    function applyHashOrDefaults() {
+      try {
+        const raw = decodeURIComponent(location.hash.replace(/^#/, ''));
+        if (raw.length === N && /^[01]+$/.test(raw)) {
+          state = raw.split('').map(Number);
+          return;
+        }
+      } catch (_) { }
+      state = defaultState();
+    }
+
+    // ── SAVE TO SUPABASE (debounced 800ms) ────────────────────────────────────
+    function scheduleSave() {
+      if (!db) return;
+      clearTimeout(saveTimer);
+      setSyncStatus('saving', 'Saving…');
+      saveTimer = setTimeout(saveToDB, 800);
+    }
+
+    async function saveToDB() {
+      const code = state.join('');
+      try {
+        const { error } = await db
+          .from('calendars')
+          .upsert({ id: CALENDAR_ID, state: code, updated_at: new Date().toISOString() });
+        if (error) throw error;
+        setSyncStatus('saved', '✓ Saved');
+      } catch (e) {
+        console.error('Save error:', e);
+        setSyncStatus('error', '⚠️ Save failed — check connection');
+      }
+    }
+
+    // ── REALTIME SUBSCRIPTION ─────────────────────────────────────────────────
+    // Listen for changes from the other person
+    function subscribeToChanges() {
+      if (!db) return;
+      db.channel('calendar-changes')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'calendars',
+          filter: `id=eq.${CALENDAR_ID}`
+        }, payload => {
+          // Only update if the change came from someone else (avoid echo)
+          if (payload.new && payload.new.state && payload.new.state !== state.join('')) {
+            state = payload.new.state.split('').map(Number);
+            renderCalendar();
+            setSyncStatus('saved', '✓ Updated by other device');
+            setTimeout(() => setSyncStatus('saved', '✓ Up to date'), 3000);
+          }
+        })
+        .subscribe();
+    }
+
+    // ── BUILD CALENDAR ─────────────────────────────────────────────────────────
+    const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'];
+
+    let cellElements = []; // keep refs for re-render
+
+    function buildCalendarShell() {
+      const calEl = document.getElementById('cal');
+      calEl.innerHTML = '';
+      cellElements = [];
+
+      // Group by month
+      const monthMap = new Map();
+      allDates.forEach((d, i) => {
+        const key = `${d.getFullYear()}-${d.getMonth()}`;
+        if (!monthMap.has(key)) monthMap.set(key, { year: d.getFullYear(), month: d.getMonth(), days: [] });
+        monthMap.get(key).days.push({ d, i });
       });
 
-      grid.appendChild(cell);
-      cellIndex++;
+      let delay = 0;
+
+      monthMap.forEach(({ year, month, days }) => {
+        const block = document.createElement('div');
+        block.className = 'month-block';
+
+        const lbl = document.createElement('div');
+        lbl.className = 'month-label';
+        lbl.innerHTML = `${MONTHS[month]} <span>${year}</span>`;
+        block.appendChild(lbl);
+
+        const hdrs = document.createElement('div');
+        hdrs.className = 'dow-headers';
+        DOW.forEach((name, wi) => {
+          const h = document.createElement('div');
+          h.className = 'dow' + (wi === 0 || wi === 6 ? ' wknd' : '');
+          h.textContent = name;
+          hdrs.appendChild(h);
+        });
+        block.appendChild(hdrs);
+
+        const grid = document.createElement('div');
+        grid.className = 'cal-grid';
+
+        const startDow = days[0].d.getDay();
+        for (let e = 0; e < startDow; e++) {
+          const em = document.createElement('div');
+          em.className = 'day empty';
+          grid.appendChild(em);
+        }
+
+        days.forEach(({ d, i }) => {
+          const cell = document.createElement('div');
+          cell.style.animationDelay = `${delay * 20}ms`;
+          cell.dataset.index = i;
+          cell.dataset.date = d.getDate();
+          delay++;
+
+          cell.addEventListener('click', () => {
+            state[i] ^= 1;
+            updateCell(cell, i, d);
+            cell.classList.add('pulse');
+            cell.addEventListener('animationend', () => cell.classList.remove('pulse'), { once: true });
+            scheduleSave();
+          });
+
+          cellElements[i] = { cell, d };
+          updateCell(cell, i, d);
+          grid.appendChild(cell);
+        });
+
+        block.appendChild(grid);
+        calEl.appendChild(block);
+      });
+    }
+
+    function updateCell(cell, i, d) {
+      const s = state[i];
+      cell.className = `day ${s ? 'stop' : 'go'}`;
+      cell.style.animationDelay = cell.style.animationDelay || '0ms';
+      cell.innerHTML = s
+        ? `<span class="day-num">${d.getDate()}</span><span class="day-tag tag-stop">🏠 Home</span>`
+        : `<span class="day-num">${d.getDate()}</span><span class="day-tag tag-go">✈️ Away</span>`;
+    }
+
+    function renderCalendar() {
+      // If shell already built, just update cells
+      if (cellElements.length > 0) {
+        cellElements.forEach(({ cell, d }, i) => {
+          if (cell) updateCell(cell, i, d);
+        });
+      } else {
+        buildCalendarShell();
+      }
+    }
+
+    // ── SHARE BUTTON ──────────────────────────────────────────────────────────
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      const code = state.join('');
+      const url = location.origin + location.pathname + '#' + code;
+      const result = document.getElementById('shareResult');
+      const urlBox = document.getElementById('shareUrl');
+      const msg = document.getElementById('shareMsg');
+
+      urlBox.value = url;
+      result.classList.add('visible');
+      urlBox.select();
+      urlBox.setSelectionRange(0, 99999);
+
+      const doCopy = navigator.clipboard
+        ? navigator.clipboard.writeText(url).then(() => true).catch(() => false)
+        : Promise.resolve(document.execCommand('copy'));
+
+      doCopy.then(ok => {
+        msg.textContent = ok ? '✅ Link copied! Paste it into iMessage.' : '👆 Copy the link above manually.';
+        setTimeout(() => { msg.textContent = ''; }, 8000);
+      });
     });
 
-    block.appendChild(grid);
-    cal.appendChild(block);
-  });
+    document.getElementById('shareUrl').addEventListener('click', function () {
+      this.select();
+      this.setSelectionRange(0, 99999);
+      try { document.execCommand('copy'); } catch (_) { }
+    });
 
-  // ── Share code ──────────────────────────────────────────────────────────────
-  function copyShareLink() {
-    const code = state.join('');
-    const box = document.getElementById('share-code-box');
-    const msg = document.getElementById('share-msg');
-    box.value = code;
-    box.style.display = 'block';
-    box.select();
-    box.setSelectionRange(0, 99999);
-    try {
-      document.execCommand('copy');
-      msg.textContent = '✓ Code copied! Send it to Nadav.';
-    } catch(e) {
-      msg.textContent = '👆 Select the code above and copy it!';
-    }
-    msg.style.opacity = '1';
-    setTimeout(() => msg.style.opacity = '0', 4000);
-  }
-</script>
+    // ── INIT ──────────────────────────────────────────────────────────────────
+    buildCalendarShell(); // render defaults immediately (no flash)
+    loadFromDB();         // then load real state from DB
+    subscribeToChanges(); // listen for live updates from other person
+  </script>
+
 </body>
+
 </html>
